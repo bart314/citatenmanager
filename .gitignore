@@ -1,0 +1,8 @@
+work
+vendor
+.idea
+.DS_Store
+*.phar
+*.swp
+*_old*
+watch.rb

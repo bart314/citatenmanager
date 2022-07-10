@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citatenmanager</title>
+    <style>
+        :root {
+            --titel-font-size:1.3rem;
+        }
+        body { padding:0; margin:0; font-family:Calibri,Verdana,sans-serif; }
+
+        #main { padding-top:11vh; display:flex; flex-direction:row; height:100vh; }
+        #titels-container { flex-grow:2; max-width:20vw; overflow:auto; border-right:solid blue 1px; }
+        #titels-container > h2 { text-align:center; margin-top:0;}
+        #titels-container > div { height:200vh; }
+        #citaten-container { flex-grow:8; max-width:80vw; overflow:auto; }
+        #citaten-container > div { height:200vh; }
+
+        p.ref { padding-top:0; margin:0; text-align:right; color:gray; }
+
+        div.titel, div.citaat { margin:auto; border-radius:10px; box-shadow:none; border:solid #777 1px; margin-bottom:10px; padding:0 5px; cursor:pointer; }
+        div.titel:hover, div.citaat:hover { background-color:lightblue; box-shadow: 0 10px 6px -6px #777;;}
+
+        div.active { background-color:blue; color:white; cursor:auto; }
+
+        div.titel { width:80%; }
+        div.titel h1 { font-size:var(--titel-font-size); margin-bottom:0; }
+        div.titel p { margin-top:0; }
+        span.pill { float:right; background-color:royalblue; color:white; border-radius:50%; padding:2px 7px; font-size:.8rem; }
+
+        div.citaat { width:95%; font-size:1.2rem; line-height:1.6 rem; padding:10px; }
+
+        #koptekst { height:10vh; width:100vw; position:fixed; display:flex; align-items:center; justify-content:space-between; border-bottom:solid blue 1px}
+        #koptekst button { background-color: lightblue; font-size: 1.2rem; border-radius: 10px; padding: 10px; margin-left:10px; cursor:pointer; }
+        #koptekst button:hover, #koptekst button:focus { background-color:blue; color:white; }
+        #koptekst input[type="text"] { font-size:1.2rem; }
+        div.kt-item { display:flex; align-items:center; }
+
+        #zoeken { padding-left:2vw; }
+        #collecties { padding-right:2vw; }
+        #placeholder { display:flex; align-content:space-around; justify-content:center; height:40%; align-items:center; }
+
+
+
+    </style>
+</head>
+<body>
+  <div id="koptekst">
+    <div class="kt-item" id="zoeken">
+      <div><input type="text" placeholder="Vul zoekterm in" size="40" id="zoekbalk"></div>
+      <div><button id="zoekknop">Zoek</button></div>
+    </div>
+    <div class="kt-item" id="collecties">
+      <div><button>Collecties</button></div>
+      <div><button>Nieuwe titel</button></div>
+    </div>
+  </div><!-- koptekst -->
+
+  <div id="main">
+
+    <div id="titels-container">
+      <h2>Titels</h2>
+        <div id="titels">
+        </div>
+    </div><!-- titels -->
+
+
+    <div id="citaten-container">
+      <div id="citaten">
+        <div id="placeholder"><p> – geen resultaten – </p></div>
+      </div>
+    </div><!-- citaten -->
+  </div><!-- main -->
+
+<template id="titel-template">
+  <div class="titel">
+    <h1></h1>
+    <p><span class="pill"></span></p>
+</div> 
+</template>
+
+<template id="citaat-template">
+  <div class="citaat">
+    <p class="content"></p>
+    <p class="ref"></p>
+  </div>
+</template>
+    
+</body>
+<script src="citaten.js"> </script>
+</html>
