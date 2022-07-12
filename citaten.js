@@ -1,24 +1,19 @@
 const API_URL = 'http://localhost:8080/server.php'
 
-const titel_citaten = (el) => {
+function titel_citaten(evt) {
     document.querySelectorAll('div.titel').forEach ( tit => tit.classList.remove('active') )
-    try {  // chromium
-        id = el.path[1].dataset.ref
-        el.path[1].classList.add('active')
-    } catch (error) {  // firefox
-        id = el.target.parentElement.dataset.ref
-        el.target.parentElement.classList.add('active')
-    } 
+    id = evt.currentTarget.dataset.ref
+    evt.currentTarget.classList.add('active')
+    console.log(evt.currentTarget.dataset.type)
 
-    fetch(`${API_URL}/titel/${id}/all`)
+    const endpoint = evt.currentTarget.dataset.type=='collection' ? 'collections' : 'titel'
+
+    fetch(`${API_URL}/${endpoint}/${id}/all`)
     .then( resp => resp.json() )
     .then( json => show_citaten(json) )
 }
 
-
-
 function show_citaten(json) {
-    console.log(json)
     const div = document.querySelector("#citaten")
     div.innerHTML = ''
     json.forEach ( el => {
@@ -26,16 +21,14 @@ function show_citaten(json) {
         const maindiv = templ.querySelector('div')
         templ.querySelector(".content").innerHTML = el.citaat
         templ.querySelector(".ref").innerHTML = el.pagina
-        maindiv.setAttribute('data-ref', el.id)
+        maindiv.setAttribute('data-citaat_id', el.id)
+        //maindiv.addEventListener('drag', evt => evt.dataTransfer.setData('citaat_id', el.id) )
         maindiv.addEventListener('click', get_citaat)
         div.append(templ)
 })
 }
 
-const get_citaat = (el) => {
-    console.log(el)
-}
-const zoek_citaten = (el) => {
+function zoek_citaten(el) {
     const searchterm = document.getElementById('zoekbalk').value
 
     fetch(`${API_URL}/citaat/search/${searchterm}`)
@@ -49,24 +42,79 @@ const zoek_citaten = (el) => {
     })
 }
 
-
-
-// Start off with all the titles in de navigation bar
-fetch (`${API_URL}/titel/all`)
-.then ( resp=> resp.json() )
-.then ( json => {
+function fill_navigator(json) {
     const div = document.querySelector("#titels")
-    json.forEach ( el => {
+    div.innerHTML = ''
+    json.data?.forEach ( el => {
         const templ = document.querySelector("#titel-template").content.cloneNode(true)
         const maindiv = templ.querySelector('div')
         templ.querySelector('h1').innerHTML = el.titel
         templ.querySelector('p').innerHTML = `${el.auteur} <span class="pill">${el.aantal}</span>`
         maindiv.setAttribute('data-ref', el.id)
+        if (json.type=='collection') {
+            maindiv.addEventListener('dragover', evt => evt.preventDefault() )
+            maindiv.addEventListener('drop', evt => citaat_to_collection(evt) )
+            maindiv.setAttribute('data-type','collection')
+        } else {
+            maindiv.setAttribute('data-type','titel')
+        }
         maindiv.addEventListener('click', titel_citaten)
+
         div.appendChild(templ)
     })
-})
+}
+
+function get_citaat(id) {
+    console.log(id) // TODO
+}
+
+function drag(evt) {
+    console.log(evt.currentTarget)
+    evt.currentTarget.classList.add('dragging')
+    evt.dataTransfer.setData('citaat_id', evt.target.dataset.citaat_id)
+}
+
+function citaat_to_collection(evt) {
+    evt.preventDefault()
+    let coll_id = evt.currentTarget.dataset.ref
+    let quotes = [evt.dataTransfer.getData('citaat_id')]
+    let body = JSON.stringify({coll_id, quotes})
+    this.el = evt.currentTarget
+    fetch(`${API_URL}/collections/add`, {
+        method:'POST',
+        headers: {'content-type':'application.json'},
+        body
+    })
+    .then ( resp => resp.json() )
+    .then ( json => this.el.querySelector('.pill').innerHTML=json.tot )
+
+
+}
+
+// Start off with all the titles in de navigation bar
+fetch (`${API_URL}/titel/all`)
+.then ( resp=> resp.json() )
+.then ( json => fill_navigator(json) )
 
 document.querySelector('#zoekbalk').addEventListener('blur', zoek_citaten)
 document.querySelector('#zoekknop').addEventListener('click', zoek_citaten)
+
+document.querySelector("#btn-collecties").addEventListener('click', (el) => {
+    document.querySelector("#titels-container h2").innerHTML = 'Collecties'
+    el.target.style.display = 'none'
+    document.querySelector("#btn-titels").style.display='block'
+    fetch(`${API_URL}/collections/all`)
+    .then( resp => resp.json() )
+    .then( json => fill_navigator(json) )
+})
+
+document.querySelector("#btn-titels").addEventListener('click', (el) => {
+    document.querySelector("#titels-container h2").innerHTML = 'Titels'
+    el.target.style.display = 'none'
+    document.querySelector("#btn-collecties").style.display='block'
+    fetch(`${API_URL}/titel/all`)
+    .then( resp => resp.json() )
+    .then( json => fill_navigator(json) )
+})
+
 
