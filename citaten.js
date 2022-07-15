@@ -107,8 +107,10 @@ document.querySelector('#zoekknop').addEventListener('click', zoek_citaten)
 
 document.querySelector("#btn-collecties").addEventListener('click', (el) => {
     document.querySelector("#titels-container h2").innerHTML = 'Collecties'
-    el.target.style.display = 'none'
+    document.querySelector('#btn-nieuwe-titel').style.display='none'
+    document.querySelector('#btn-nieuwe-collectie').style.display='block'
     document.querySelector("#btn-titels").style.display='block'
+    document.querySelector("#btn-collecties").style.display='none'
     fetch(`${API_URL}/collections/all`)
     .then( resp => resp.json() )
     .then( json => {
@@ -119,8 +121,11 @@ document.querySelector("#btn-collecties").addEventListener('click', (el) => {
 
 document.querySelector("#btn-titels").addEventListener('click', (el) => {
     document.querySelector("#titels-container h2").innerHTML = 'Titels'
+
     el.target.style.display = 'none'
     document.querySelector("#btn-collecties").style.display='block'
+    document.querySelector('#btn-nieuwe-titel').style.display='block'
+    document.querySelector('#btn-nieuwe-collectie').style.display='none'
     fetch(`${API_URL}/titel/all`)
     .then( resp => resp.json() )
     .then( json => {
@@ -132,12 +137,15 @@ document.querySelector("#btn-titels").addEventListener('click', (el) => {
 
 document.querySelector('#filter').addEventListener('input', evt => {
     let val = evt.currentTarget.value.toLowerCase()
-    console.log(val)
     let tmp = {
         type: navigator_items.type,
         data: navigator_items.data.filter( el =>  el.titel.toLowerCase().includes(val) || el.auteur?.toLowerCase().includes(val) )
     }
     fill_navigator(tmp)
+})
+
+document.querySelector('#btn-nieuwe-titel').addEventListener('click', evt=> {
+    console.log(['nieuwe titel'])
 })
 
 

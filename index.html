@@ -9,14 +9,14 @@
             --titel-font-size:1.3rem;
         }
         body { padding:0; margin:0; font-family:Calibri,Verdana,sans-serif; }
-        input[type="text"] { font-size:1.2rem; padding:4px; }
+        input[type="text"], select { font-size:1.2rem; padding:4px; }
+        button { background-color: lightblue; font-size: 1.2rem; border-radius: 10px; padding: 10px; margin-left:10px; cursor:pointer; }
+        button:hover, button:focus { background-color:blue; color:white; }
 
         #main { padding-top:11vh; display:flex; flex-direction:row; height:100vh; }
         #titels-container { flex-grow:2; max-width:20vw; overflow:auto; border-right:solid blue 1px; }
         #titels-container > h2 { text-align:center; margin:0; }
-        /* #titels-container > div { height:200vh; } */
         #citaten-container { flex-grow:8; max-width:80vw; overflow:auto; }
-        /* #citaten-container > div { height:200vh; } */
 
         p.ref { padding-top:0; margin:0; text-align:right; color:gray; }
 
@@ -33,8 +33,6 @@
         div.citaat { width:95%; font-size:1.2rem; line-height:1.6 rem; padding:10px; }
 
         #koptekst { height:10vh; width:100vw; position:fixed; display:flex; align-items:center; justify-content:space-between; border-bottom:solid blue 1px; background-color:white; }
-        #koptekst button { background-color: lightblue; font-size: 1.2rem; border-radius: 10px; padding: 10px; margin-left:10px; cursor:pointer; }
-        #koptekst button:hover, #koptekst button:focus { background-color:blue; color:white; }
         div.kt-item { display:flex; align-items:center; }
 
         #zoeken { padding-left:2vw; }
@@ -45,11 +43,73 @@
         #filter-div { text-align:center; padding:2vh 0; width:100%; }
         #filter { width:80%; font-size:1.2rem; }
 
+        #new-div-container { display:none; position:fixed; z-index:999; top:0; left:0; width:100vw; height:100vh; background-color:lightgray; opacity:.9; justify-content:center; align-items:center; }
+        #new-div-container div { width:70vw; height:70vh; background-color:white; border:solid blue 1px; text-align:center;}
+        #new-div-container div table { margin:0 auto; }
+        #new-title-div { display:none; }
 
 
     </style>
 </head>
 <body>
+
+  <div id="new-div-container">
+    <div id="new-title-div">
+      <h2>Nieuwe titel</h2>
+
+      <form>
+        <table>
+        <tr>
+          <td><label for="titel"><b>Titel: </b></label></td>
+          <td><input type="text" name="titel" id="titel" placeholder="Nieuwe titel" size="44"> </td>
+        </tr>
+
+        <tr>
+        <td><label for="auteur"><b>Selecteer auteur:</b></label></td>
+        <td>
+        <select name="" id="">
+          <option value="">Henk</option>
+          <option value="">Henk</option>
+          <option value="">Henk</option>
+          <option value="">Henk</option>
+          <option value="">Henk</option>
+          <option value="">Henk</option>
+          <option value="">Henk</option>
+        </select>
+        </td>
+        </tr>
+
+        <tr>
+          <td><b>Of nieuwe auteur:</b></td>
+          <td>
+          <label for="voornaam"><input type="text" placeholder="Voornaam"></label>
+          <label for="achternaam"><input type="text" placeholder="Achternaam"></label>
+          </td>
+        </tr>
+      </table>
+      <p><button>Citaten uploaden</button><button>Opslaan</button></p>
+      </form>
+    </div><!-- new-title-div -->
+
+    <div id="new-collection-div">
+      <h2>Nieuwe collectie</h2>
+      <form>
+        <table>
+        <tr>
+          <td><label for="titel"><b>Naam: </b></label></td>
+          <td><input type="text" name="titel" id="titel" placeholder="Nieuwe collectie" size="44"> </td>
+        </tr>
+      </table>
+
+      <p><button>Opslaan</button></p>
+    </form>
+
+
+    </div><!-- new-collection-div -->
+  </div><!-- new-div-container -->
+
+
+
   <div id="koptekst">
     <div class="kt-item" id="zoeken">
       <div><input type="text" placeholder="Vul zoekterm in" size="40" id="zoekbalk"></div>
