@@ -1,4 +1,5 @@
 const API_URL = 'http://localhost:8080/server.php'
+var navigator_items = {}
 
 function titel_citaten(evt) {
     document.querySelectorAll('div.titel').forEach ( tit => tit.classList.remove('active') )
@@ -44,12 +45,14 @@ function zoek_citaten(el) {
 
 function fill_navigator(json) {
     const div = document.querySelector("#titels")
+
     div.innerHTML = ''
     json.data?.forEach ( el => {
         const templ = document.querySelector("#titel-template").content.cloneNode(true)
         const maindiv = templ.querySelector('div')
+        let aut = el.auteur ? el.auteur : '&nbsp;'
         templ.querySelector('h1').innerHTML = el.titel
-        templ.querySelector('p').innerHTML = `${el.auteur} <span class="pill">${el.aantal}</span>`
+        templ.querySelector('p').innerHTML = `${aut} <span class="pill">${el.aantal}</span>`
         maindiv.setAttribute('data-ref', el.id)
         if (json.type=='collection') {
             maindiv.addEventListener('dragover', evt => evt.preventDefault() )
@@ -94,7 +97,10 @@ function citaat_to_collection(evt) {
 // Start off with all the titles in de navigation bar
 fetch (`${API_URL}/titel/all`)
 .then ( resp=> resp.json() )
-.then ( json => fill_navigator(json) )
+.then ( json => {
+    navigator_items = json
+    fill_navigator(json) 
+})
 
 document.querySelector('#zoekbalk').addEventListener('blur', zoek_citaten)
 document.querySelector('#zoekknop').addEventListener('click', zoek_citaten)
@@ -105,7 +111,10 @@ document.querySelector("#btn-collecties").addEventListener('click', (el) => {
     document.querySelector("#btn-titels").style.display='block'
     fetch(`${API_URL}/collections/all`)
     .then( resp => resp.json() )
-    .then( json => fill_navigator(json) )
+    .then( json => {
+        navigator_items = json
+        fill_navigator(json) 
+    })
 })
 
 document.querySelector("#btn-titels").addEventListener('click', (el) => {
@@ -114,7 +123,21 @@ document.querySelector("#btn-titels").addEventListener('click', (el) => {
     document.querySelector("#btn-collecties").style.display='block'
     fetch(`${API_URL}/titel/all`)
     .then( resp => resp.json() )
-    .then( json => fill_navigator(json) )
+    .then( json => {
+        navigator_items = json
+        fill_navigator(json) 
+    })
+
+})
+
+document.querySelector('#filter').addEventListener('input', evt => {
+    let val = evt.currentTarget.value.toLowerCase()
+    console.log(val)
+    let tmp = {
+        type: navigator_items.type,
+        data: navigator_items.data.filter( el =>  el.titel.toLowerCase().includes(val) || el.auteur?.toLowerCase().includes(val) )
+    }
+    fill_navigator(tmp)
 })
 
 

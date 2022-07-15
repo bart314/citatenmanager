@@ -9,13 +9,14 @@
             --titel-font-size:1.3rem;
         }
         body { padding:0; margin:0; font-family:Calibri,Verdana,sans-serif; }
+        input[type="text"] { font-size:1.2rem; padding:4px; }
 
         #main { padding-top:11vh; display:flex; flex-direction:row; height:100vh; }
         #titels-container { flex-grow:2; max-width:20vw; overflow:auto; border-right:solid blue 1px; }
-        #titels-container > h2 { text-align:center; margin-top:0;}
-        #titels-container > div { height:200vh; }
+        #titels-container > h2 { text-align:center; margin:0; }
+        /* #titels-container > div { height:200vh; } */
         #citaten-container { flex-grow:8; max-width:80vw; overflow:auto; }
-        #citaten-container > div { height:200vh; }
+        /* #citaten-container > div { height:200vh; } */
 
         p.ref { padding-top:0; margin:0; text-align:right; color:gray; }
 
@@ -34,14 +35,15 @@
         #koptekst { height:10vh; width:100vw; position:fixed; display:flex; align-items:center; justify-content:space-between; border-bottom:solid blue 1px; background-color:white; }
         #koptekst button { background-color: lightblue; font-size: 1.2rem; border-radius: 10px; padding: 10px; margin-left:10px; cursor:pointer; }
         #koptekst button:hover, #koptekst button:focus { background-color:blue; color:white; }
-        #koptekst input[type="text"] { font-size:1.2rem; }
         div.kt-item { display:flex; align-items:center; }
 
         #zoeken { padding-left:2vw; }
         #collecties { padding-right:2vw; }
-        #placeholder { display:flex; align-content:space-around; justify-content:center; height:40%; align-items:center; }
+        #placeholder { display:flex; align-content:space-around; justify-content:center; height:80%; align-items:center; }
         #btn-titels { display:none; }
         #btn-nieuwe-collectie { display:none; }
+        #filter-div { text-align:center; padding:2vh 0; width:100%; }
+        #filter { width:80%; font-size:1.2rem; }
 
 
 
@@ -64,6 +66,7 @@
 
     <div id="titels-container">
       <h2>Titels</h2>
+      <div id="filter-div"><input type="text" id="filter" placeholder="filter"></div>
         <div id="titels">
         </div>
     </div><!-- titels -->
