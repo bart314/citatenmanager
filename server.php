@@ -3,10 +3,13 @@ namespace App;
 require 'db/Title.php';
 require 'db/Quote.php';
 require 'db/Collection.php';
+require 'db/Auteur.php';
 
 use App\Database\Quote;
 use App\Database\Title;
 use App\Database\Collection;
+use App\Database\Auteur;
+
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -31,6 +34,14 @@ $app->get('/titel/{id}',  function(Request $request, Response $response, array $
 
 $app->get('/titel/{id}/all',  function(Request $request, Response $response, array $args) {
     $result = Quote::find_by_title($args['id']);
+    $response->getBody()->write(json_encode($result));
+    return $response;
+});
+
+/* AUTEURS */
+
+$app->get('/auteur/all', function(Request $request, Response $response) {
+    $result = Auteur::getAll();
     $response->getBody()->write(json_encode($result));
     return $response;
 });
@@ -70,7 +81,7 @@ $app->post('/collections/new', function(Request $request, Response $response) {
     $body = json_decode($request->getBody(), true);
 
     $coll_id = Collection::create($body);
-    $response->getBody()->write(json_encode(["id", (int)$coll_id]));
+    $response->getBody()->write(json_encode(["id" => (int)$coll_id]));
     return $response->withHeader("Status-Code", "201 Created");
 });
 

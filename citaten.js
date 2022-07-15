@@ -90,20 +90,26 @@ function citaat_to_collection(evt) {
     })
     .then ( resp => resp.json() )
     .then ( json => this.el.querySelector('.pill').innerHTML=json.tot )
+}
 
-
+function get_navigation_items(what) {
+    fetch (`${API_URL}/${what}/all`)
+    .then ( resp=> resp.json() )
+    .then ( json => {
+        navigator_items = json
+        fill_navigator(json) 
+    })
 }
 
 // Start off with all the titles in de navigation bar
-fetch (`${API_URL}/titel/all`)
-.then ( resp=> resp.json() )
-.then ( json => {
-    navigator_items = json
-    fill_navigator(json) 
-})
+get_navigation_items('titel')
 
 document.querySelector('#zoekbalk').addEventListener('blur', zoek_citaten)
 document.querySelector('#zoekknop').addEventListener('click', zoek_citaten)
+
+/* NIEUWE TITELS OF COLLECTIONS */
+document.querySelector('#new-div-container').addEventListener('click', evt => evt.currentTarget.style.display='none' )
+document.querySelectorAll('#new-div-container div').forEach( el => el.addEventListener('click', evt => evt.stopPropagation()) )
 
 document.querySelector("#btn-collecties").addEventListener('click', (el) => {
     document.querySelector("#titels-container h2").innerHTML = 'Collecties'
@@ -111,12 +117,7 @@ document.querySelector("#btn-collecties").addEventListener('click', (el) => {
     document.querySelector('#btn-nieuwe-collectie').style.display='block'
     document.querySelector("#btn-titels").style.display='block'
     document.querySelector("#btn-collecties").style.display='none'
-    fetch(`${API_URL}/collections/all`)
-    .then( resp => resp.json() )
-    .then( json => {
-        navigator_items = json
-        fill_navigator(json) 
-    })
+    get_navigation_items('collections')
 })
 
 document.querySelector("#btn-titels").addEventListener('click', (el) => {
@@ -126,13 +127,7 @@ document.querySelector("#btn-titels").addEventListener('click', (el) => {
     document.querySelector("#btn-collecties").style.display='block'
     document.querySelector('#btn-nieuwe-titel').style.display='block'
     document.querySelector('#btn-nieuwe-collectie').style.display='none'
-    fetch(`${API_URL}/titel/all`)
-    .then( resp => resp.json() )
-    .then( json => {
-        navigator_items = json
-        fill_navigator(json) 
-    })
-
+    get_navigation_items('titel')
 })
 
 document.querySelector('#filter').addEventListener('input', evt => {
@@ -144,8 +139,50 @@ document.querySelector('#filter').addEventListener('input', evt => {
     fill_navigator(tmp)
 })
 
+document.querySelector('#btn-nieuwe-collectie').addEventListener('click', evt => {
+    document.getElementById('new-div-container').style.display = 'flex'
+    document.getElementById('new-collection-div').style.display = 'block'
+    document.getElementById('new-title-div').style.display = 'none'
+})
+
 document.querySelector('#btn-nieuwe-titel').addEventListener('click', evt=> {
     console.log(['nieuwe titel'])
+    fetch(`${API_URL}/auteur/all`)
+    .then( resp => resp.json() )
+    .then( json => {
+        const select = document.querySelector('#new-title-div select')
+        select.innerHTML = ''
+        json.forEach( el => {
+            let option = document.createElement('option')
+            option.setAttribute('value', el.id)
+            option.innerHTML = `${el.voornaam} ${el.achternaam}`
+            select.appendChild(option)
+        })
+        document.getElementById('new-div-container').style.display = 'flex'
+        document.getElementById('new-collection-div').style.display = 'none'
+        document.getElementById('new-title-div').style.display = 'block'
+
+    })
 })
+
+document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener('click', evt => {
+    evt.preventDefault()
+    const form = evt.target.form
+    const body = Object.fromEntries(new FormData(form))
+    if (body.voornaam !='' || body.achternaam !='') delete body.auteur 
+    console.log(form.dataset.action)
+
+    fetch(`${API_URL}${form.dataset.action}`, {
+        method:'POST',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify(body)
+    })
+    .then( resp => resp.json() )
+    .then( json => console.log(json) ) 
+
+
+}))
 
 

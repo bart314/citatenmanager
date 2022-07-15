@@ -19,7 +19,7 @@ class Collection {
 
     static function get_all() {
         $sql = "select id, naam as titel, count(citaat_id) as aantal from collections  
-                join collections_citaten cc on cc.collection_id=collections.id 
+                left outer join collections_citaten cc on cc.collection_id=collections.id 
                 group by naam,id
                 order by naam";
         try { 

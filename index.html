@@ -43,8 +43,8 @@
         #filter-div { text-align:center; padding:2vh 0; width:100%; }
         #filter { width:80%; font-size:1.2rem; }
 
-        #new-div-container { display:none; position:fixed; z-index:999; top:0; left:0; width:100vw; height:100vh; background-color:lightgray; opacity:.9; justify-content:center; align-items:center; }
-        #new-div-container div { width:70vw; height:70vh; background-color:white; border:solid blue 1px; text-align:center;}
+        #new-div-container { display:none; cursor:pointer; position:fixed; z-index:999; top:0; left:0; width:100vw; height:100vh; background-color:lightgray; opacity:.9; justify-content:center; align-items:center; }
+        #new-div-container div { cursor:default; width:70vw; height:70vh; background-color:white; border:solid blue 1px; text-align:center;}
         #new-div-container div table { margin:0 auto; }
         #new-title-div { display:none; }
 
@@ -57,51 +57,39 @@
     <div id="new-title-div">
       <h2>Nieuwe titel</h2>
 
-      <form>
+      <form data-action="/titel/new">
         <table>
         <tr>
           <td><label for="titel"><b>Titel: </b></label></td>
           <td><input type="text" name="titel" id="titel" placeholder="Nieuwe titel" size="44"> </td>
         </tr>
-
         <tr>
-        <td><label for="auteur"><b>Selecteer auteur:</b></label></td>
-        <td>
-        <select name="" id="">
-          <option value="">Henk</option>
-          <option value="">Henk</option>
-          <option value="">Henk</option>
-          <option value="">Henk</option>
-          <option value="">Henk</option>
-          <option value="">Henk</option>
-          <option value="">Henk</option>
-        </select>
-        </td>
+          <td><label for="auteur"><b>Selecteer auteur:</b></label></td>
+          <td> <select name="auteur"> </select> </td>
         </tr>
-
         <tr>
           <td><b>Of nieuwe auteur:</b></td>
           <td>
-          <label for="voornaam"><input type="text" placeholder="Voornaam"></label>
-          <label for="achternaam"><input type="text" placeholder="Achternaam"></label>
+          <label for="voornaam"><input type="text" placeholder="Voornaam" name="voornaam"></label>
+          <label for="achternaam"><input type="text" placeholder="Achternaam" name="achternaam"></label>
           </td>
         </tr>
       </table>
-      <p><button>Citaten uploaden</button><button>Opslaan</button></p>
+      <p><button>Citaten uploaden</button><button class="btn-save">Opslaan</button></p>
       </form>
     </div><!-- new-title-div -->
 
     <div id="new-collection-div">
       <h2>Nieuwe collectie</h2>
-      <form>
+      <form data-action="/collections/new">
         <table>
         <tr>
           <td><label for="titel"><b>Naam: </b></label></td>
-          <td><input type="text" name="titel" id="titel" placeholder="Nieuwe collectie" size="44"> </td>
+          <td><input type="text" name="naam" id="naam" placeholder="Nieuwe collectie" size="44"> </td>
         </tr>
       </table>
 
-      <p><button>Opslaan</button></p>
+      <p><button class="btn-save">Opslaan</button></p>
     </form>
 
 
