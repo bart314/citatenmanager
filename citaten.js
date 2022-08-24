@@ -1,5 +1,6 @@
 const API_URL = 'http://localhost:8080/server.php'
 var navigator_items = {}
+var new_quotes_file
 
 function titel_citaten(evt) {
     document.querySelectorAll('div.titel').forEach ( tit => tit.classList.remove('active') )
@@ -31,8 +32,8 @@ function show_citaten(json) {
 
 function zoek_citaten(el) {
     const searchterm = document.getElementById('zoekbalk').value
-
-    fetch(`${API_URL}/citaat/search/${searchterm}`)
+    console.log(`${API_URL}/citaat/search/${searchterm}`.replaceAll(' ', '%20'))
+    fetch(`${API_URL}/citaat/search/${searchterm}`.replaceAll(' ', '%20%'))
     .then ( resp => resp.json() )
     .then ( json => {
         json.forEach ( el => {
@@ -101,6 +102,25 @@ function get_navigation_items(what) {
     })
 }
 
+function drop_file(evt) {
+    evt.preventDefault()
+    evt.currentTarget.style.backgroundColor='white'
+    const newfile = evt.dataTransfer.files[0]
+    let html = '<tr><td><b>Citaten</b></td>'
+    html += `<td>${newfile.name} (${newfile.size} bytes)</td></tr>`
+    evt.currentTarget.querySelector('table').innerHTML += html
+    new_quotes_file = newfile
+
+
+
+
+}
+
+function drag_file(evt) { 
+    evt.preventDefault() 
+    evt.currentTarget.style.backgroundColor='gray'
+}
+
 // Start off with all the titles in de navigation bar
 get_navigation_items('titel')
 
@@ -111,7 +131,7 @@ document.querySelector('#zoekknop').addEventListener('click', zoek_citaten)
 document.querySelector('#new-div-container').addEventListener('click', evt => evt.currentTarget.style.display='none' )
 document.querySelectorAll('#new-div-container div').forEach( el => el.addEventListener('click', evt => evt.stopPropagation()) )
 
-document.querySelector("#btn-collecties").addEventListener('click', (el) => {
+document.querySelector("#btn-collecties").addEventListener('click', el => {
     document.querySelector("#titels-container h2").innerHTML = 'Collecties'
     document.querySelector('#btn-nieuwe-titel').style.display='none'
     document.querySelector('#btn-nieuwe-collectie').style.display='block'
@@ -147,11 +167,13 @@ document.querySelector('#btn-nieuwe-collectie').addEventListener('click', evt =>
 
 document.querySelector('#btn-nieuwe-titel').addEventListener('click', evt=> {
     console.log(['nieuwe titel'])
+    console.log(evt)
+    console.log(evt.dataTransfer)
     fetch(`${API_URL}/auteur/all`)
     .then( resp => resp.json() )
     .then( json => {
         const select = document.querySelector('#new-title-div select')
-        select.innerHTML = ''
+        select.innerHTML = '<option>===selecteer===</option>'
         json.forEach( el => {
             let option = document.createElement('option')
             option.setAttribute('value', el.id)
@@ -168,21 +190,33 @@ document.querySelector('#btn-nieuwe-titel').addEventListener('click', evt=> {
 document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener('click', evt => {
     evt.preventDefault()
     const form = evt.target.form
-    const body = Object.fromEntries(new FormData(form))
-    if (body.voornaam !='' || body.achternaam !='') delete body.auteur 
+    //console.log('=== new_quotes_file ===')
+    //console.log(new_quotes_file)
+    //console.log('=== form.dataTranser ===')
+    //console.log(form.dataTransfer)
+    let body = new FormData(form)
+
+    // let body = new FormData(form)
+    console.log(body)
+    body.append('quotes', new_quotes_file)
+    
+
+
+    console.log('=== form body ===')
+    console.log(JSON.stringify(body))
+
+
+    if (body.voornaam !='' || body.achternaam !='') delete body.auteur_id 
     console.log(form.dataset.action)
 
-    fetch(`${API_URL}${form.dataset.action}`, {
+    const options = {
         method:'POST',
-        headers: {
-            'Content-Type':'application/json'
-        },
-        body:JSON.stringify(body)
-    })
+        body
+    }
+
+    fetch(`${API_URL}${form.dataset.action}`, options)
     .then( resp => resp.json() )
     .then( json => console.log(json) ) 
-
-
 }))
 
 

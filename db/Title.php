@@ -5,7 +5,25 @@
   use App\Database\Connection;
 
   class Title {
-    static function create ($data) {
+    static function create ($data)
+    {
+        $auteur_id = (int)$data['data']['auteur_id'];
+        if ($auteur_id==0) $auteur_id = Auteur::find($data['data'])[0];
+        if (!$auteur_id) $auteur_id = Auteur::create($data['data']);
+
+        $sql = "insert into titels(titel, jaartal, auteur_id) values (:titel, :jaartal, :auteur_id)";
+        try {
+            $db = Connection::getInstance();
+            $stmt = $db->dbh->prepare($sql);
+            $stmt->bindParam(':titel', $data['data']['titel']);
+            $stmt->bindParam(':jaartal', $data['data']['jaartal']);
+            $stmt->bindParam('auteur_id', $auteur_id);
+            $stmt->execute();
+            $art_id =  $db->dbh->lastInsertId();
+            if (array_key_exists('quotes', $data)) return Title::insert_quotes($art_id, $data['quotes']);
+        } catch (\PDOException $e) {
+            print_r($stmt->errorInfo());
+        }
 
     }
 
@@ -43,6 +61,17 @@
 
 
     static function update($cmd_id, $cmd) {
+
+    }
+
+    static function insert_quotes($art_id, $tmp_file) {
+        $input = fopen($tmp_file['tmp_name'], "r");
+        while(!feof($input)) {
+            $quote = fgets($input);
+
+        }
+
+
     }
 
     function delete($cmd_id) {

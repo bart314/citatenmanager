@@ -38,6 +38,17 @@ $app->get('/titel/{id}/all',  function(Request $request, Response $response, arr
     return $response;
 });
 
+$app->post('/titel/new', function(Request $request, Response $response) {
+    $data = [
+        "data" => $_POST,
+        "quotes" => $_FILES['quotes']
+    ];
+    $result = Title::create($data);
+
+    $response->getBody()->write(json_encode($result));
+    return $response;
+});
+
 /* AUTEURS */
 
 $app->get('/auteur/all', function(Request $request, Response $response) {
@@ -104,7 +115,8 @@ $app->add(function ($request, $handler) {
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-            ->withHeader('Content-Type','application/json');
+            // ->withHeader('Content-Type','application/json')
+            ->withHeader('Content-Type','multipart/form-data');
 });
 
 
