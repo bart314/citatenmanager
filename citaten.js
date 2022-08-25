@@ -190,24 +190,10 @@ document.querySelector('#btn-nieuwe-titel').addEventListener('click', evt=> {
 document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener('click', evt => {
     evt.preventDefault()
     const form = evt.target.form
-    //console.log('=== new_quotes_file ===')
-    //console.log(new_quotes_file)
-    //console.log('=== form.dataTranser ===')
-    //console.log(form.dataTransfer)
     let body = new FormData(form)
-
-    // let body = new FormData(form)
-    console.log(body)
     body.append('quotes', new_quotes_file)
-    
-
-
-    console.log('=== form body ===')
-    console.log(JSON.stringify(body))
-
 
     if (body.voornaam !='' || body.achternaam !='') delete body.auteur_id 
-    console.log(form.dataset.action)
 
     const options = {
         method:'POST',
@@ -216,7 +202,11 @@ document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener(
 
     fetch(`${API_URL}${form.dataset.action}`, options)
     .then( resp => resp.json() )
-    .then( json => console.log(json) ) 
+    .then( json => {
+        document.getElementById('new-div-container').style.display='none'
+        document.getElementById('feedback').innerHTML = `${json.aantal_quotes} citaten toegevoegd.`
+        setTimeout (() => document.getElementById('feedback').style.display='none', 5000)
+    })
 }))
 
 
