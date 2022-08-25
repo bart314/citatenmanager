@@ -6,3 +6,4 @@ vendor
 *.swp
 *_old*
 watch.rb
+db/Config.php
