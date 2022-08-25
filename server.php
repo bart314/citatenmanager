@@ -45,7 +45,7 @@ $app->post('/titel/new', function(Request $request, Response $response) {
     ];
     $result = Title::create($data);
 
-    $response->getBody()->write(json_encode($result));
+    $response->getBody()->write(json_encode(['aantal_quotes'=>$result]));
     return $response;
 });
 

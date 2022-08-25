@@ -4,21 +4,22 @@
 
   class Quote { 
     
-    static function create ($cmd, $art_id) { 
-      $cmd = rtrim($cmd);
-      if ($cmd=="") return 0;
-      $txt_ar = Quote::get_text_and_pagenumber($cmd);
+    static function create ($quote, $titel_id) {
+      $quote = rtrim($quote);
+      if ($quote=="") return 0;
+      $txt_ar = Quote::get_text_and_pagenumber($quote);
 
-      $sql = "insert into quotes (artikel, quote, page) values (:art, :q, :p)";
+      $sql = "insert into citaten (titel_id, citaat, pagina) values (:titel_id, :quote, :pagina)";
       try { 
         $db = Connection::getInstance();
         $stmt = $db->dbh->prepare($sql);
-        $stmt->bindParam(':art', $art_id);
-        $stmt->bindParam(':q', $txt_ar['text']); 
-        $stmt->bindParam(':p', $txt_ar['page']); 
-        return $stmt->execute();
+        $stmt->bindParam(':titel_id', $titel_id);
+        $stmt->bindParam(':quote', $txt_ar['quote']);
+        $stmt->bindParam(':pagina', $txt_ar['page']);
+        $stmt->execute();
+        return $stmt->rowCount();
       } catch (PDOException $e) {
-        print $e->getMessage();
+        return $e->getMessage();
       }
     }
 
@@ -38,15 +39,16 @@
 
 
     static function get_text_and_pagenumber($str) {
-      $rv = array();
-      if (substr_compare($str, ')', strlen($str)-1,1) === 0) { // eindigt met haakje sluiten
-        $page = substr(strrchr($str, '('), 1, -1);
-        $str = preg_replace('/\([^\)]+\)$/', '', $str);
-      } else $page = null;
-  
-      $rv['page'] = $page;
-      $rv['text'] = $str;
-      return $rv;
+        /*
+         * formaat: quote *ref*
+         * Alles na de laatste * wordt genegeerd
+         */
+
+        $tmp = explode('*',$str);
+        return [
+            'quote' => $tmp[0],
+            'page' => $tmp[1]
+        ];
     }
 
     static function find_by_term($term) {
