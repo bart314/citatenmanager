@@ -1,4 +1,7 @@
-const API_URL = 'http://localhost:8080/server.php'
+const API_URL = document.location.href.indexOf('localhost')>0 ?
+    'http://localhost:8080/server.php' :
+    'https://bartbarnard.nl/citaten.server.php'
+
 var navigator_items = {}
 var new_quotes_file
 
