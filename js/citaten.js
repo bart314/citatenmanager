@@ -1,7 +1,4 @@
-const API_URL = document.location.href.indexOf('localhost')>0 ?
-    'http://localhost/~bart/citaten/api/index.php' :
-    'https://bartbarnard.nl/citaten/api/index.php'
-
+const API_URL = 'api/index.php'
 var navigator_items = {}
 var new_quotes_file
 
