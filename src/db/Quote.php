@@ -1,6 +1,5 @@
 <?php
   namespace App\Database;
-  require_once 'Connection.php';
 
   class Quote { 
     
@@ -65,7 +64,7 @@
         $rv = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $rv;
       } catch (\PDOException $e) {
-        print_r ($stmt->errorInfo());
+        return ($stmt->errorInfo());
       }
     }
 

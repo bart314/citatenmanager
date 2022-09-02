@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Database;
-require_once('Connection.php');
 
 class Auteur {
 

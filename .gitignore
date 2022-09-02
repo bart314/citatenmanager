@@ -7,3 +7,17 @@ vendor
 *_old*
 watch.rb
 db/Config.php
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+bin/
+.env
+old/
+
+###< symfony/framework-bundle ###

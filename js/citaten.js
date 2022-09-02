@@ -1,6 +1,6 @@
 const API_URL = document.location.href.indexOf('localhost')>0 ?
-    'http://localhost:8080/server.php' :
-    'https://bartbarnard.nl/citaten.server.php'
+    'http://localhost/~bart/citaten/api/index.php' :
+    'https://bartbarnard.nl/citaten/api/index.php'
 
 var navigator_items = {}
 var new_quotes_file
@@ -83,13 +83,12 @@ function drag(evt) {
 
 function citaat_to_collection(evt) {
     evt.preventDefault()
-    let coll_id = evt.currentTarget.dataset.ref
-    let quotes = [evt.dataTransfer.getData('citaat_id')]
+    let coll_id = Number(evt.currentTarget.dataset.ref)
+    let quotes = [Number(evt.dataTransfer.getData('citaat_id'))]
     let body = JSON.stringify({coll_id, quotes})
     this.el = evt.currentTarget
     fetch(`${API_URL}/collections/add`, {
         method:'POST',
-        headers: {'content-type':'application.json'},
         body
     })
     .then ( resp => resp.json() )
