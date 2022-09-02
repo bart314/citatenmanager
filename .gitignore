@@ -17,7 +17,6 @@ db/Config.php
 /var/
 /vendor/
 bin/
-.env
 old/
 
 ###< symfony/framework-bundle ###
