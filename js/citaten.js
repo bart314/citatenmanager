@@ -109,10 +109,6 @@ function drop_file(evt) {
     html += `<td>${newfile.name} (${newfile.size} bytes)</td></tr>`
     evt.currentTarget.querySelector('table').innerHTML += html
     new_quotes_file = newfile
-
-
-
-
 }
 
 function drag_file(evt) { 
@@ -202,8 +198,10 @@ document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener(
     fetch(`${API_URL}${form.dataset.action}`, options)
     .then( resp => resp.json() )
     .then( json => {
+        console.log(json)
         document.getElementById('new-div-container').style.display='none'
         document.getElementById('feedback').innerHTML = `${json.aantal_quotes} citaten toegevoegd.`
+        document.getElementById('feedback').style.display = 'block';
         setTimeout (() => document.getElementById('feedback').style.display='none', 5000)
     })
 }))

@@ -6,20 +6,30 @@ class Title
 {
     static function create($data)
     {
-        $auteur_id = (int)$data['data']['auteur_id'];
-        if ($auteur_id == 0) $auteur_id = Auteur::find($data['data'])[0];
-        if (!$auteur_id) $auteur_id = Auteur::create($data['data']);
+        $auteur_id = (int)$data['auteur_id'] ?? 0;
+        if ($auteur_id == 0) {
+            $tmp = [
+                'voornaam' => $data['voornaam'],
+                'achternaam' => $data['achternaam']
+            ];
+            $auteur_id = Auteur::find($tmp);
+            if (!$auteur_id) $auteur_id = Auteur::create($tmp);
+        }
 
         $sql = "insert into titels(titel, jaartal, auteur_id) values (:titel, :jaartal, :auteur_id)";
         try {
             $db = Connection::getInstance();
             $stmt = $db->dbh->prepare($sql);
-            $stmt->bindParam(':titel', $data['data']['titel']);
-            $stmt->bindParam(':jaartal', $data['data']['jaartal']);
+            $stmt->bindParam(':titel', $data['titel']);
+            $stmt->bindParam(':jaartal', $data['jaartal']);
             $stmt->bindParam('auteur_id', $auteur_id);
             $stmt->execute();
             $art_id = $db->dbh->lastInsertId();
-            if (array_key_exists('quotes', $data)) return Title::insert_quotes($art_id, $data['quotes']);
+            if ($data['quotes'] != 0) $tot = Title::insert_quotes($art_id, $data['quotes']);
+            return [
+                'artikel_id' => (int)$art_id,
+                'aantal_quotes' => $tot ?? 0
+            ];
         } catch (\PDOException $e) {
             return $e;
         }
