@@ -6,7 +6,8 @@ vendor
 *.swp
 *_old*
 watch.rb
-db/Config.php
+src/db/Config.php
+src/db/Connection.php
 
 ###> symfony/framework-bundle ###
 /.env.local
