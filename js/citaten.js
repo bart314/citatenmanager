@@ -6,7 +6,6 @@ function titel_citaten(evt) {
     document.querySelectorAll('div.titel').forEach ( tit => tit.classList.remove('active') )
     id = evt.currentTarget.dataset.ref
     evt.currentTarget.classList.add('active')
-    console.log(evt.currentTarget.dataset.type)
 
     const endpoint = evt.currentTarget.dataset.type=='collection' ? 'collections' : 'titel'
 
@@ -32,7 +31,6 @@ function show_citaten(json) {
 
 function zoek_citaten(el) {
     const searchterm = document.getElementById('zoekbalk').value
-    console.log(`${API_URL}/citaat/search/${searchterm}`.replaceAll(' ', '%20'))
     fetch(`${API_URL}/citaat/search/${searchterm}`.replaceAll(' ', '%20%'))
     .then ( resp => resp.json() )
     .then ( json => {
@@ -68,12 +66,19 @@ function fill_navigator(json) {
     })
 }
 
-function get_citaat(id) {
-    console.log(id) // TODO
+function get_citaat(evt) {
+    const id = evt.currentTarget.dataset.citaat_id
+    fetch(`${API_URL}/citaat/${id}`)
+    .then ( resp => resp.json() )
+    .then ( json => {
+        const el = document.getElementById('citaat')
+        el.innerHTML = `${json.citaat} (${json.achternaam}, ${json.jaartal}, ${json.pagina})`
+        document.getElementById('new-div-container').style.display = 'flex'
+        document.getElementById('enkel-citaat-div').style.display = 'block'
+    })
 }
 
 function drag(evt) {
-    console.log(evt.currentTarget)
     evt.currentTarget.classList.add('dragging')
     evt.dataTransfer.setData('citaat_id', evt.target.dataset.citaat_id)
 }
@@ -123,7 +128,10 @@ document.querySelector('#zoekbalk').addEventListener('blur', zoek_citaten)
 document.querySelector('#zoekknop').addEventListener('click', zoek_citaten)
 
 /* NIEUWE TITELS OF COLLECTIONS */
-document.querySelector('#new-div-container').addEventListener('click', evt => evt.currentTarget.style.display='none' )
+document.querySelector('#new-div-container').addEventListener('click', evt => {
+    evt.currentTarget.style.display='none' 
+    evt.currentTarget.querySelectorAll('div').forEach( ch => ch.style.display='none' )
+})
 document.querySelectorAll('#new-div-container div').forEach( el => el.addEventListener('click', evt => evt.stopPropagation()) )
 
 document.querySelector("#btn-collecties").addEventListener('click', el => {
@@ -161,9 +169,6 @@ document.querySelector('#btn-nieuwe-collectie').addEventListener('click', evt =>
 })
 
 document.querySelector('#btn-nieuwe-titel').addEventListener('click', evt=> {
-    console.log(['nieuwe titel'])
-    console.log(evt)
-    console.log(evt.dataTransfer)
     fetch(`${API_URL}/auteur/all`)
     .then( resp => resp.json() )
     .then( json => {
@@ -198,7 +203,6 @@ document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener(
     fetch(`${API_URL}${form.dataset.action}`, options)
     .then( resp => resp.json() )
     .then( json => {
-        console.log(json)
         document.getElementById('new-div-container').style.display='none'
         document.getElementById('feedback').innerHTML = `${json.aantal_quotes} citaten toegevoegd.`
         document.getElementById('feedback').style.display = 'block';

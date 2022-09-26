@@ -23,7 +23,10 @@
     }
 
     static function read ($cmd_id) {
-      $sql = "select * from citaten where id=:id";
+      $sql = "select citaten.citaat, citaten.pagina, auteurs.achternaam, titels.jaartal from citaten
+      join titels on citaten.titel_id = titels.id
+      join auteurs on titels.auteur_id = auteurs.id
+      where citaten.id = :id";
       try { 
         $db = Connection::getInstance();
         $stmt = $db->dbh->prepare($sql);
