@@ -35,7 +35,7 @@ class Collection {
 
 
     static function get(int $id) { 
-        $sql = "select naam,citaat_id,citaat,concat(titel, ', p.',pagina) as pagina from collections
+        $sql = "select naam,citaat_id as id,citaat,concat(titel, ', p.',pagina) as pagina from collections
                 join collections_citaten on collections_citaten.collection_id=:id
                 join citaten on collections_citaten.citaat_id = citaten.id
                 join titels on citaten.titel_id=titels.id
