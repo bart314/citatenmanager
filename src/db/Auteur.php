@@ -20,7 +20,7 @@ class Auteur {
     }
 
     static function find($data) {
-        $sql = "select id from auteurs where voornaam=:voornaam and achternaam=:achternaam";
+        $sql = "select id from auteurs where trim(voornaam)=:voornaam and trim(achternaam)=:achternaam";
 
         try {
             $db = Connection::getInstance();

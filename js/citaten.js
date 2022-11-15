@@ -110,15 +110,33 @@ function drop_file(evt) {
     evt.preventDefault()
     evt.currentTarget.style.backgroundColor='white'
     const newfile = evt.dataTransfer.files[0]
-    let html = '<tr><td><b>Citaten</b></td>'
-    html += `<td>${newfile.name} (${newfile.size} bytes)</td></tr>`
-    evt.currentTarget.querySelector('table').innerHTML += html
     new_quotes_file = newfile
+    document.getElementById('citaten_file').innerHTML = `${newfile.name} (${newfile.size} bytes)`
+    check_input()
 }
 
 function drag_file(evt) { 
     evt.preventDefault() 
     evt.currentTarget.style.backgroundColor='gray'
+}
+
+function check_input() {
+    let canactivate = true;
+    if (document.getElementById('titel').value == '') canactivate = false;
+    if (document.getElementById('jaartal').value == '') canactivate = false;
+    if ( (document.getElementById('voornaam').value == '' 
+                || document.getElementById('achternaam').value == '') 
+          && (document.getElementById('auteur_id').value == 0) ) canactivate = false
+    if (new_quotes_file == undefined) canactivate = false
+
+    if (canactivate) {
+        console.log('jojo')
+        document.getElementById('citaten_opslaan').style.visibility = 'visible'
+
+    } else {
+        document.getElementById('citaten_opslaan').style.visibility = 'hidden'
+        console.log('no way')
+    }
 }
 
 // Start off with all the titles in de navigation bar
@@ -173,7 +191,7 @@ document.querySelector('#btn-nieuwe-titel').addEventListener('click', evt=> {
     .then( resp => resp.json() )
     .then( json => {
         const select = document.querySelector('#new-title-div select')
-        select.innerHTML = '<option>===selecteer===</option>'
+        select.innerHTML = '<option value="0">===selecteer===</option>'
         json.forEach( el => {
             let option = document.createElement('option')
             option.setAttribute('value', el.id)
@@ -192,6 +210,7 @@ document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener(
     const form = evt.target.form
     let body = new FormData(form)
     body.append('quotes', new_quotes_file)
+    console.log(body)
 
     if (body.voornaam !='' || body.achternaam !='') delete body.auteur_id 
 
@@ -210,4 +229,6 @@ document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener(
     })
 }))
 
-
+document.getElementById('titelform').querySelectorAll('input').forEach( el => {
+    el.addEventListener( 'input', evt => check_input() )
+})

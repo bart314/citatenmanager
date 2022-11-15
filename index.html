@@ -12,6 +12,7 @@
         input[type="text"], select { font-size:1.2rem; padding:4px; }
         button { background-color: lightblue; font-size: 1.2rem; border-radius: 10px; padding: 10px; margin-left:10px; cursor:pointer; }
         button:hover, button:focus { background-color:blue; color:white; }
+        button.btn-save { visibility:hidden; }
 
         #main { padding-top:11vh; display:flex; flex-direction:row; height:100vh; }
         #titels-container { flex-grow:2; max-width:20vw; overflow:auto; border-right:solid blue 1px; }
@@ -63,7 +64,7 @@
     <div id="new-title-div" droppable="true" ondrop="drop_file(event)" ondragover="drag_file(event)">
       <h2>Nieuwe titel</h2>
 
-      <form data-action="/titel/new">
+      <form data-action="/titel/new" id="titelform">
         <table>
         <tr>
           <td><label for="titel"><b>Titel: </b></label></td>
@@ -75,17 +76,18 @@
         </tr>
         <tr>
           <td><label for="auteur"><b>Selecteer auteur:</b></label></td>
-          <td> <select name="auteur_id"> <option value="">==selecteer==</option></select> </td>
+          <td> <select name="auteur_id" id="auteur_id" onchange="check_input()"> <option value="">==selecteer==</option></select> </td>
         </tr>
         <tr>
           <td><b>Of nieuwe auteur:</b></td>
           <td>
-          <label for="voornaam"><input type="text" placeholder="Voornaam" name="voornaam" value="Henk"></label>
-          <label for="achternaam"><input type="text" placeholder="Achternaam" name="achternaam" value="de Boer"></label>
+          <label for="voornaam"><input type="text" placeholder="Voornaam" name="voornaam" id="voornaam"></label>
+          <label for="achternaam"><input type="text" placeholder="Achternaam" name="achternaam" id="achternaam"></label>
           </td>
         </tr>
+        <tr><td><b>Citaten:</b></td><td id="citaten_file">Geen bestand geselecteerd</td></tr>
       </table>
-      <p><button>Citaten uploaden</button><button class="btn-save">Opslaan</button></p>
+      <p><button class="btn-save" id="citaten_opslaan">Opslaan</button></p>
       </form>
     </div><!-- new-title-div -->
 
