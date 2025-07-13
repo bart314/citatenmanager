@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Controller;
+
 use App\Database\Auteur;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

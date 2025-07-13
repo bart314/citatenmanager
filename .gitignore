@@ -6,8 +6,8 @@ vendor
 *.swp
 *_old*
 watch.rb
-src/db/Config.php
-src/db/Connection.php
+src/Database/Config.php
+src/Database/Connection.php
 
 .htaccess
 .htpasswd

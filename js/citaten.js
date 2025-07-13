@@ -34,6 +34,7 @@ function zoek_citaten(el) {
     fetch(`${API_URL}/citaat/search/${searchterm}`.replaceAll(' ', '%20%'))
     .then ( resp => resp.json() )
     .then ( json => {
+        console.log(json)
         json.forEach ( el => {
             el.citaat = el.citaat.replaceAll(searchterm, `<b>${searchterm}</b>`)
             el.pagina = `${el.titel}, p.${el.pagina}`
@@ -210,9 +211,12 @@ document.querySelectorAll('button.btn-save').forEach( el => el.addEventListener(
     const form = evt.target.form
     let body = new FormData(form)
     body.append('quotes', new_quotes_file)
+    console.log('voor check')
     console.log(body)
 
     if (body.voornaam !='' || body.achternaam !='') delete body.auteur_id 
+    console.log('na check')
+    console.log(body)
 
     const options = {
         method:'POST',
